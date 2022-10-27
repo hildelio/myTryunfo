@@ -16,10 +16,37 @@ class App extends React.Component {
     isSaveButtonDisabled: true,
   };
 
+  validateButtonFilled = () => {
+    const {
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+      cardRare,
+    } = this.state;
+    const MIN = 0;
+    const MAX = 90;
+    const MAX_SUM = 210;
+    const isFilled = cardName && cardDescription && cardImage && cardRare;
+    const attr1 = cardAttr1 <= MAX && cardAttr1 >= MIN;
+    const attr2 = cardAttr2 <= MAX && cardAttr2 >= MIN;
+    const attr3 = cardAttr3 <= MAX && cardAttr3 >= MIN;
+    const maxSum = Math.round(cardAttr1)
+    + Math.round(cardAttr2)
+    + Math.round(cardAttr3) <= MAX_SUM;
+    this.setState({
+      isSaveButtonDisabled: !isFilled || !attr1 || !attr2 || !attr3 || !maxSum,
+    });
+  };
+
   onInputChange = (event) => {
     const { name, value } = event.target;
     this.setState({
       [name]: value,
+    }, () => {
+      this.validateButtonFilled();
     });
   };
 
