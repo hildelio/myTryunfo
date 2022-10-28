@@ -11,8 +11,8 @@ class App extends React.Component {
     cardAttr3: '',
     cardImage: '',
     cardRare: '',
-    cardTrunfo: '',
-    hasTrunfo: '',
+    cardTrunfo: false,
+    hasTrunfo: false,
     isSaveButtonDisabled: true,
     data: [],
   };
@@ -53,7 +53,8 @@ class App extends React.Component {
   };
 
   onSaveButtonClick = (objectInfo) => {
-    this.setState((prevState) => ({
+    const { data } = this.state;
+    this.setState(() => ({
       cardName: '',
       cardDescription: '',
       cardAttr1: '0',
@@ -62,7 +63,7 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       isSaveButtonDisabled: true,
-      data: [...prevState.data, objectInfo],
+      data: data.concat(objectInfo),
     }), () => {
       const { cardTrunfo } = this.state;
 
@@ -77,6 +78,11 @@ class App extends React.Component {
     });
   };
 
+  deletCard = () => {
+    const { data } = this.state;
+    console.log(data);
+  };
+
   render() {
     const {
       cardName,
@@ -89,6 +95,7 @@ class App extends React.Component {
       cardTrunfo,
       hasTrunfo,
       isSaveButtonDisabled,
+      data,
     } = this.state;
     return (
       <div>
@@ -117,6 +124,26 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
         />
+        { data && data.map((card) => (
+          <div key={ card.cardName }>
+            <Card
+              cardName={ card.cardName }
+              cardDescription={ card.cardDescription }
+              cardAttr1={ card.cardAttr1 }
+              cardAttr2={ card.cardAttr2 }
+              cardAttr3={ card.cardAttr3 }
+              cardImage={ card.cardImage }
+              cardRare={ card.cardRare }
+              cardTrunfo={ card.cardTrunfo }
+            />
+            <button
+              data-testid="delete-buton"
+              type="button"
+              onClick={ this.deletCard }
+            >
+              Excluir
+            </button>
+          </div>)) }
       </div>
     );
   }
