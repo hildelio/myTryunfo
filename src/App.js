@@ -78,9 +78,17 @@ class App extends React.Component {
     });
   };
 
-  deletCard = () => {
-    const { data } = this.state;
-    console.log(data);
+  deletCard = (event) => {
+    this.setState((prevState) => ({
+      data: prevState.data.filter((e) => e.cardName !== event.target.id),
+    }), () => {
+      const { cardTrunfo } = this.state;
+      if (!cardTrunfo) {
+        this.setState({
+          hasTrunfo: false,
+        });
+      }
+    });
   };
 
   render() {
@@ -137,7 +145,8 @@ class App extends React.Component {
               cardTrunfo={ card.cardTrunfo }
             />
             <button
-              data-testid="delete-buton"
+              id={ card.cardName }
+              data-testid="delete-button"
               type="button"
               onClick={ this.deletCard }
             >
