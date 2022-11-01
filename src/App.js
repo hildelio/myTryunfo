@@ -15,6 +15,7 @@ class App extends React.Component {
     hasTrunfo: false,
     isSaveButtonDisabled: true,
     data: [],
+    inputFilterName: '',
   };
 
   validateButtonFilled = () => {
@@ -88,6 +89,16 @@ class App extends React.Component {
           hasTrunfo: false,
         });
       }
+      this.setState({
+        cardTrunfo: false,
+      });
+    });
+  };
+
+  filterInput = (event) => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
     });
   };
 
@@ -104,10 +115,12 @@ class App extends React.Component {
       hasTrunfo,
       isSaveButtonDisabled,
       data,
+      inputFilterName,
     } = this.state;
     return (
       <div>
         <h1>Tryunfo!</h1>
+
         <Form
           cardName={ cardName }
           cardDescription={ cardDescription }
@@ -132,27 +145,37 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
         />
-        { data && data.map((card) => (
-          <div key={ card.cardName }>
-            <Card
-              cardName={ card.cardName }
-              cardDescription={ card.cardDescription }
-              cardAttr1={ card.cardAttr1 }
-              cardAttr2={ card.cardAttr2 }
-              cardAttr3={ card.cardAttr3 }
-              cardImage={ card.cardImage }
-              cardRare={ card.cardRare }
-              cardTrunfo={ card.cardTrunfo }
-            />
-            <button
-              id={ card.cardName }
-              data-testid="delete-button"
-              type="button"
-              onClick={ this.deletCard }
-            >
-              Excluir
-            </button>
-          </div>)) }
+        <input
+          type="text"
+          name="inputFilterName"
+          data-testid="name-filter"
+          value={ inputFilterName }
+          onChange={ this.filterInput }
+        />
+        { data && data
+          .filter((card) => card
+            .cardName.toLowerCase().includes(inputFilterName.toLowerCase()))
+          .map((card) => (
+            <div key={ card.cardName }>
+              <Card
+                cardName={ card.cardName }
+                cardDescription={ card.cardDescription }
+                cardAttr1={ card.cardAttr1 }
+                cardAttr2={ card.cardAttr2 }
+                cardAttr3={ card.cardAttr3 }
+                cardImage={ card.cardImage }
+                cardRare={ card.cardRare }
+                cardTrunfo={ card.cardTrunfo }
+              />
+              <button
+                id={ card.cardName }
+                data-testid="delete-button"
+                type="button"
+                onClick={ this.deletCard }
+              >
+                Excluir
+              </button>
+            </div>)) }
       </div>
     );
   }
